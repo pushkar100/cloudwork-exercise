@@ -8,6 +8,7 @@ import { WorkloadService } from './services';
 
 const workloadService = new WorkloadService
 const timer = (time: number) => new Promise(resolve => setTimeout(() => resolve(), time)) 
+const createdTimes: { [key: string]: number } = {}
 
 type AppEpic = Epic<RootAction, RootAction, RootState>;
 
@@ -16,6 +17,7 @@ const logWorkloadSubmissions: AppEpic = (action$, state$) => (
     filter(isActionOf(workloadsActions.submit)),
     mergeMap(async (action) => {
       const createdTask = await workloadService.create(action.payload)
+      createdTimes[`${createdTask.id}`] = Date.now()
       return workloadsActions.created(createdTask)
     })
   )
@@ -39,8 +41,8 @@ const workloadTimer: AppEpic = (action$, state$) => (
   action$.pipe(
     filter(isActionOf(workloadsActions.created)),
     mergeMap(async (action) => {
-      const minBuffer = 300
-      const timeDiff = +action.payload.completeDate - Date.now() + minBuffer
+      const timeDiff = +action.payload.completeDate - createdTimes[action.payload.id]
+      delete createdTimes[action.payload.id]
       await timer(timeDiff)
       const currentWork = await workloadService.checkStatus(action.payload)
       return workloadsActions.updateStatus(currentWork) 
