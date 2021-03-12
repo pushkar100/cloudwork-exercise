@@ -1,13 +1,13 @@
 import { combineEpics, Epic } from 'redux-observable';
-import { filter, mergeMap, map, tap, ignoreElements } from 'rxjs/operators';
-import { from } from 'rxjs';
+import { filter, mergeMap, takeUntil } from 'rxjs/operators';
 import { isActionOf } from 'typesafe-actions';
 
 import { RootAction, RootState } from '../reducer';
 import * as workloadsActions from './actions';
-import { WorkloadService } from './services'
+import { WorkloadService } from './services';
 
 const workloadService = new WorkloadService
+const timer = (time: number) => new Promise(resolve => setTimeout(() => resolve(), time)) 
 
 type AppEpic = Epic<RootAction, RootAction, RootState>;
 
@@ -26,19 +26,35 @@ const cancelWorkload: AppEpic = (action$, state$) => (
     filter(isActionOf(workloadsActions.cancel)),
     mergeMap(async (action) => {
       const currentWork = await workloadService.checkStatus(action.payload)
-      if (!['SUCCESS', 'FAILURE'].includes(currentWork.status)) {
+      if (['WORKING'].includes(currentWork.status)) {
         const work = await workloadService.cancel(action.payload)
         return workloadsActions.updateStatus(work) 
-      } else {
-        return workloadsActions.updateStatus(currentWork) 
       }
+      return workloadsActions.updateStatus(currentWork) 
     })
+  )
+);
+
+const workloadTimer: AppEpic = (action$, state$) => (
+  action$.pipe(
+    filter(isActionOf(workloadsActions.created)),
+    mergeMap(async (action) => {
+      const minBuffer = 50
+      const timeDiff = +action.payload.completeDate - Date.now() + minBuffer
+      await timer(timeDiff)
+      const currentWork = await workloadService.checkStatus(action.payload)
+      return workloadsActions.updateStatus(currentWork) 
+    }),
+    takeUntil(action$.pipe(
+      filter(isActionOf(workloadsActions.cancel))
+    ))
   )
 );
 
 export const epics = combineEpics(
   logWorkloadSubmissions,
-  cancelWorkload
+  cancelWorkload,
+  workloadTimer
 );
 
 export default epics;
