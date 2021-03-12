@@ -8,16 +8,16 @@ import './App.css';
 class App extends PureComponent {
   render() {
     return (
-      <div>
-        <h1>CloudWork</h1>
+      <div className="container">
+        <h1 className="header">CloudWork</h1>
         <hr />
         
-        <div >
+        <div className="workload-form-container">
           <WorkloadFormContainer />
         </div>
         <hr />
 
-        <div>
+        <div className="workloads-container">
           <h2>Workloads</h2>
           <WorkloadListContainer />
         </div>

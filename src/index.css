@@ -12,3 +12,84 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.container {
+  width: 75%;
+  margin: 20px auto;
+}
+
+.header {
+  color: #5200f5;
+}
+
+.workload-form-container form {
+  text-align: center;
+}
+
+.workload-form-container h2 {
+  color: #5200f5;
+}
+
+.workload-form-container label {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.workload-form-container button,
+.workloads-container .WorkloadItem button {
+  color: #5200f5;
+  background-color: #fff;
+  border: 1px solid #5200f5;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.25s ease-in;
+  transition: color 0.25s ease-in;
+  font-weight: bold;
+}
+
+.workload-form-container button:hover,
+.workloads-container .WorkloadItem button:hover {
+  background-color: #5200f5;
+  color: #fff;
+}
+
+.workloads-container .WorkloadItem {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #5200f5;
+  border-radius: 5px;
+  display: inline-block;
+  width: 80%;
+  vertical-align: middle;
+}
+
+.workloads-container ol {
+  list-style: none;
+  counter-reset: item;
+}
+
+.workloads-container li {
+  counter-increment: item;
+  margin-bottom: 5px;
+}
+
+.workloads-container li:before {
+  margin-right: 10px;
+  content: counter(item);
+  background: #5200f5;
+  border-radius: 100%;
+  color: white;
+  width: 1.2em;
+  text-align: center;
+  display: inline-block;
+}
+
+.workloads-container h2 {
+  color: #5200f5;
+}
+
+hr {
+  border-color: #5200f5;
+}
