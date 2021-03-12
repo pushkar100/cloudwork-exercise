@@ -39,7 +39,7 @@ const workloadTimer: AppEpic = (action$, state$) => (
   action$.pipe(
     filter(isActionOf(workloadsActions.created)),
     mergeMap(async (action) => {
-      const minBuffer = 50
+      const minBuffer = 300
       const timeDiff = +action.payload.completeDate - Date.now() + minBuffer
       await timer(timeDiff)
       const currentWork = await workloadService.checkStatus(action.payload)
