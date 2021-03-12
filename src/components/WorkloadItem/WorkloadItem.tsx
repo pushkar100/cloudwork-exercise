@@ -2,6 +2,12 @@ import React from 'react';
 import TimeAgo from 'react-timeago';
 import { Status } from '../../state/workloads'
 
+const statusSpecificClasses = {
+  'WORKING': 'working-div-style',
+  'SUCCESS': 'success-div-style',
+  'FAILURE': 'failure-div-style',
+  'CANCELED': 'canceled-div-style'
+}
 
 export interface WorkloadItemStateProps {
   id: number;
@@ -20,7 +26,7 @@ export interface WorkloadItemProps extends
 
 
 const WorkloadItem: React.SFC<WorkloadItemProps> = (props) => (
-  <div className="WorkloadItem">
+  <div className={`WorkloadItem ${statusSpecificClasses[props.status]}`}>
     <div>
       <h3 className="WorkloadItem-heading">Workload #{props.id}</h3>
       <span className="WorkloadItem-subHeading">Complexity: {props.complexity}</span>

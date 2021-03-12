@@ -93,3 +93,19 @@ code {
 hr {
   border-color: #5200f5;
 }
+
+.working-div-style {
+  background-color: #dddddd;
+}
+
+.success-div-style {
+  background-color: #46b694;
+}
+
+.failure-div-style {
+  background-color: #ff5c5c;
+}
+
+.canceled-div-style {
+  background-color: #ffaeae;
+}
